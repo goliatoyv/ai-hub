@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Hub</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBlYTVlOSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM2MzY2ZjEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgcng9IjciIGZpbGw9InVybCgjZykiLz4KICA8dGV4dCB4PSIxNiIgeT0iMjEuNSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9Ii0wLjUiPkFJPC90ZXh0Pgo8L3N2Zz4=">
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #f4f4f0;
+  --card:    #ffffff;
+  --border:  #e2e2da;
+  --border2: #d0d0c8;
+  --text:    #1a1a24;
+  --sub:     #8888a0;
+  --ln:      #c8c8c0;
+  --domain:  #a8a8b8;
+  --hover:   #f8f8f5;
+
+  --agents:  #0ea5e9;
+  --uiux:    #8b5cf6;
+  --images:  #ec4899;
+  --video:   #f97316;
+  --audio:   #10b981;
+  --code:    #d97706;
+  --publish: #0891b2;
+  --docs:    #ea580c;
+  --google:  #3b82f6;
+  --custom:  #6b7280;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Martian Mono', monospace;
+  font-size: 12.5px;
+  min-height: 100vh;
+}
+
+body::before {
+  content:'';
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    linear-gradient(rgba(0,0,0,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,.025) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.wrap {
+  position:relative; z-index:1;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0 28px 100px;
+}
+
+/* ── HEADER ── */
+header {
+  padding: 48px 0 36px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 30px;
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+}
+.h-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.h-title-accent {
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.h-sub {
+  font-size: 10px;
+  color: var(--sub);
+  margin-bottom: 3px;
+}
+.h-right { margin-left:auto; display:flex; gap:10px; align-items:center; }
+
+/* ── SEARCH ── */
+.search-wrap {
+  position: relative;
+}
+#search {
+  font-family: inherit;
+  font-size: 11px;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 8px 14px 8px 34px;
+  width: 220px;
+  color: var(--text);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+#search:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(14,165,233,.1);
+}
+.search-icon {
+  position:absolute; left:11px; top:50%; transform:translateY(-50%);
+  font-size:12px; color:var(--sub); pointer-events:none;
+}
+
+/* ── BUTTON ── */
+.btn {
+  font-family: inherit;
+  font-size: 10.5px;
+  font-weight: 600;
+  background: var(--text);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  letter-spacing: .02em;
+  transition: background .15s, transform .1s;
+  white-space: nowrap;
+}
+.btn:hover { background: #2a2a3a; }
+.btn:active { transform: scale(.97); }
+.btn-ghost {
+  background: transparent;
+  color: var(--sub);
+  border: 1px solid var(--border2);
+}
+.btn-ghost:hover { background: var(--hover); color: var(--text); }
+
+/* ── GRID ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 16px;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: box-shadow .2s;
+}
+.card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.06); }
+
+/* category header */
+.card-head {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.card-head::after {
+  content:'';
+  position:absolute; left:0; top:0; bottom:0;
+  width:3px; background:var(--acc);
+}
+
+.head-body {
+  padding: 11px 16px 11px 18px;
+  display:flex; align-items:center; gap:10px; flex:1;
+}
+.head-name { font-size:11.5px; font-weight:600; color: var(--acc); letter-spacing:.06em; text-transform:uppercase; }
+.head-count {
+  margin-left:auto;
+  font-size:9px; color:var(--sub);
+  background:#f4f4f0;
+  border:1px solid var(--border);
+  border-radius:4px; padding:1px 7px;
+}
+
+/* ── TOOL ROWS ── */
+.tools { list-style:none; }
+
+.tool-row { display:grid; grid-template-columns:38px 1fr; }
+.tool-row.div-row { grid-template-columns:1fr; }
+
+.ln {
+  font-size:9px; color:var(--ln);
+  padding:8px 8px; text-align:right;
+  border-right:1px solid var(--border);
+  background:#fafaf8;
+  user-select:none;
+}
+
+.tool-link {
+  display:flex; align-items:center; gap:9px;
+  padding:7px 14px;
+  text-decoration:none; color:var(--text);
+  border-left:2px solid transparent;
+  transition:background .12s, border-color .12s;
+  overflow:hidden;
+}
+.tool-link:hover {
+  background: var(--hover);
+  border-left-color: var(--acc);
+}
+.tool-link:hover .tl-arrow  { opacity:1; transform:translate(0,0); }
+.tool-link:hover .tl-domain { opacity:1; }
+
+.tl-icon {
+  width:16px; height:16px;
+  border-radius:3px;
+  flex-shrink:0;
+  object-fit:contain;
+}
+.tl-saved  { width:5px; height:5px; border-radius:50%; background:var(--acc); flex-shrink:0; box-shadow:0 0 4px var(--acc); }
+.tl-name   { flex:1; font-size:12.5px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tl-domain { font-size:9.5px; color:var(--domain); opacity:0; transition:opacity .15s; flex-shrink:0; white-space:nowrap; }
+.tl-arrow  { font-size:10px; color:var(--acc); opacity:0; transform:translate(-4px,0); transition:opacity .15s, transform .15s; flex-shrink:0; margin-left:2px; }
+.tl-custom { font-size:9px; color:var(--sub); border:1px solid var(--border); border-radius:3px; padding:0 4px; flex-shrink:0; }
+
+.div-inner { height:1px; background:var(--border); margin:2px 0; }
+
+/* ── TOOLTIP ── */
+#tip {
+  position:fixed; z-index:9999; pointer-events:none;
+  background:var(--card);
+  border:1px solid var(--border2);
+  border-radius:7px;
+  padding:8px 12px;
+  font-size:11px;
+  color:var(--text);
+  max-width:240px;
+  line-height:1.5;
+  box-shadow: 0 4px 16px rgba(0,0,0,.1);
+  opacity:0;
+  transition:opacity .12s;
+}
+
+/* ── MODAL ── */
+.modal-bg {
+  display:none; position:fixed; inset:0; z-index:1000;
+  background:rgba(0,0,0,.35); backdrop-filter:blur(4px);
+  align-items:center; justify-content:center;
+}
+.modal-bg.open { display:flex; }
+.modal {
+  background:var(--card);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  padding:28px 28px 24px;
+  width:380px;
+  box-shadow:0 20px 60px rgba(0,0,0,.15);
+}
+.modal h3 {
+  font-size:13px; font-weight:700;
+  margin-bottom:20px;
+  color:var(--text);
+}
+.field { margin-bottom:14px; }
+.field label { display:block; font-size:9.5px; color:var(--sub); margin-bottom:5px; letter-spacing:.04em; text-transform:uppercase; }
+.field input, .field select, .field textarea {
+  font-family:inherit; font-size:11.5px;
+  width:100%; padding:8px 11px;
+  border:1px solid var(--border2); border-radius:6px;
+  background:var(--bg); color:var(--text);
+  outline:none; transition:border-color .15s;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color:#0ea5e9;
+}
+.field textarea { resize:vertical; min-height:62px; }
+.modal-btns { display:flex; gap:8px; margin-top:20px; justify-content:flex-end; }
+
+
+    /* -- MAIN TABS -- */
+    .main-tabs { display:flex; gap:16px; margin-top:20px; padding-bottom:12px; }
+    .mtab { font-family:inherit; font-size:15px; font-weight:700; color:var(--sub); background:none; border:none; border-bottom:3px solid transparent; padding:4px 0; cursor:pointer; transition:all .2s; }
+    .mtab.active { color:var(--text); border-color:#0ea5e9; }
+    .mtab:hover:not(.active) { color:var(--text); }
+
+    /* -- PREMIUM WORKFLOW CARDS -- */
+    #practices-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: start; max-width: 1200px; margin: 0 auto; width: 100%; }
+    @media (max-width: 900px) { #practices-container { grid-template-columns: 1fr; } }
+    
+    .wf-card { background: #fff; border: 1px solid #eef0f3; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); transition: transform 0.2s, box-shadow 0.2s; height: 100%; display: flex; flex-direction: column; }
+    .wf-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08); }
+    
+    .wf-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .wf-title { font-size: 16px; font-weight: 800; color: #1e293b; line-height: 1.3; }
+    .wf-tag { font-size: 9px; font-weight: 800; text-transform: uppercase; padding: 3px 8px; border-radius: 100px; letter-spacing: 0.05em; background: var(--hover); color: var(--acc); border: 1px solid var(--border); }
+    
+    .wf-why-box { background: #f8fafc; border-left: 4px solid var(--acc); padding: 12px 16px; border-radius: 4px; margin-bottom: 20px; }
+    .wf-why-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; display: block; }
+    .wf-why-text { font-size: 11.5px; color: #475569; line-height: 1.5; }
+    
+    .wf-stepper { display: flex; flex-direction: column; gap: 0; padding-left: 10px; position: relative; }
+    .wf-stepper::before { content: ''; position: absolute; left: 14px; top: 12px; bottom: 12px; width: 2px; border-left: 2px dashed #e2e8f0; }
+    
+    .wf-step { position: relative; padding-left: 28px; padding-bottom: 20px; }
+    .wf-step:last-child { padding-bottom: 0; }
+    .wf-step-dot { position: absolute; left: 0; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: #fff; border: 2px solid var(--acc); z-index: 1; }
+    
+    .wf-step-tool { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: #1e293b; text-decoration: none; padding: 2px 4px; border-radius: 4px; transition: background 0.2s; font-size: 13px; margin-bottom: 4px; }
+    .wf-step-tool:hover { background: #f1f5f9; }
+    .wf-step-tool img { width: 16px; height: 16px; border-radius: 4px; }
+    
+    .wf-step-info { font-size: 11.5px; color: #64748b; line-height: 1.5; }
+    .wf-step-alt-btn { font-size: 9px; color: var(--sub); margin: 0 4px; }
+
+    /* Compact Link Styles */
+    .tool-row { padding: 4px 10px !important; }
+    .tl-name { font-size: 12px !important; font-weight: 600 !important; }
+    .tl-icon { width: 20px !important; height: 20px !important; }
+    .card { padding: 12px 0 !important; border-radius: 10px !important; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05) !important;}
+    .head-name { font-size: 11px !important; font-weight: 700 !important; text-transform: uppercase; }
+    .wrap { max-width: 1300px !important; padding: 0 40px !important;}
+
+    
+    /* Hyper-compact links */
+    .tool-row { padding: 2px 10px !important; border-bottom: 1px solid rgba(0,0,0,0.02); }
+    .tool-link { height: 28px !important; }
+    .tl-name { font-size: 11.5px !important; font-weight: 600 !important; }
+    .tl-icon { width: 16px !important; height: 16px !important; margin-right: 8px !important; }
+    .ln { font-size: 9px !important; width: 18px !important; opacity: 0.4; }
+    .card { padding: 6px 0 2px !important; margin-bottom: 10px !important; }
+    .card-head { margin-bottom: 4px !important; }
+    .head-name { font-size: 10px !important; }
+    .head-count { font-size: 10px !important; }
+
+    /* tabs */
+.tab-row { display:flex; gap:4px; margin-bottom:18px; border-bottom:1px solid var(--border); padding-bottom:12px; }
+.tab {
+  font-family:inherit; font-size:10.5px; font-weight:600;
+  padding:5px 14px; border-radius:5px; border:1px solid transparent;
+  background:transparent; color:var(--sub); cursor:pointer;
+  transition:all .15s;
+}
+.tab.active { background:var(--text); color:#fff; border-color:var(--text); }
+.tab:not(.active):hover { background:var(--hover); color:var(--text); }
+
+/* color picker row */
+.color-row { display:flex; align-items:center; gap:10px; }
+.color-row input[type=color] { width:36px; height:30px; padding:2px; border:1px solid var(--border2); border-radius:5px; cursor:pointer; background:none; }
+.color-presets { display:flex; gap:6px; flex-wrap:wrap; }
+.cp { width:18px; height:18px; border-radius:4px; cursor:pointer; transition:transform .1s; flex-shrink:0; }
+.cp:hover { transform:scale(1.25); }
+
+/* delete btn on rows */
+.tl-del { font-size:11px; color:var(--sub); opacity:0; margin-left:4px; cursor:pointer; flex-shrink:0; transition:opacity .15s, color .15s; line-height:1; }
+.tool-link:hover .tl-del { opacity:1; }
+.tl-del:hover { color:#ef4444; }
+
+/* hidden cards */
+.card.hidden { display:none; }
+.tool-row.hidden { display:none; }
+</style>
+</head>
+<body>
+
+<div id="tip"></div>
+
+<!-- ADD SERVICE MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h3 id="modal-title">+ new Entry()</h3>
+
+    <!-- TAB SWITCHER -->
+    <div class="tab-row">
+      <button class="tab active" onclick="switchTab('link')">Link</button>
+      <button class="tab" onclick="switchTab('category')">+ Category</button>
+        <button class="tab" onclick="switchTab('workflow')">Workflow</button>
+    </div>
+
+    <!-- LINK TAB -->
+    <div id="tab-link">
+      <div class="field">
+        <label>Name</label>
+        <input id="f-name" type="text" placeholder="e.g. Midjourney">
+      </div>
+      <div class="field">
+        <label>URL</label>
+        <input id="f-url" type="url" placeholder="https://...">
+      </div>
+      <div class="field">
+        <label>Description (tooltip)</label>
+        <textarea id="f-tip" placeholder="Коротко про сервіс..."></textarea>
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <select id="f-cat"></select>
+      </div>
+    </div>
+
+    <!-- WORKFLOW TAB -->
+      <div id="tab-workflow" style="display:none">
+        <div class="field"><label>Назва кейсу (напр. Професійне відео)</label><input id="fw-title" type="text" style="width:100%"></div>
+        <div class="field"><label>Категорія (Tag: MEDIA, CODE...)</label><div class="color-row"><input id="fw-color" type="color" value="#0ea5e9"><input id="fw-catname" type="text" style="flex:1" placeholder="MEDIA"></div></div>
+        <div class="field"><label>Чому це працює? (Опис цінності)</label><textarea id="fw-why" style="min-height:60px;width:100%"></textarea></div>
+        <div id="fw-steps-container"></div>
+        <button class="btn btn-ghost" style="width:100%; margin-bottom:14px; font-size: 10px;" onclick="addWfStepField()">+ Додати крок інструменту</button>
+      </div><!-- CATEGORY TAB -->
+    <div id="tab-category" style="display:none">
+      <div class="field">
+        <label>Category name</label>
+        <input id="fc-name" type="text" placeholder="e.g. Analytics">
+      </div>
+      <div class="field">
+        <label>Accent color</label>
+        <div class="color-row">
+          <input id="fc-color" type="color" value="#6366f1">
+          <span class="color-presets">
+            <span class="cp" style="background:#0ea5e9" onclick="setColor('#0ea5e9')"></span>
+            <span class="cp" style="background:#8b5cf6" onclick="setColor('#8b5cf6')"></span>
+            <span class="cp" style="background:#ec4899" onclick="setColor('#ec4899')"></span>
+            <span class="cp" style="background:#10b981" onclick="setColor('#10b981')"></span>
+            <span class="cp" style="background:#f97316" onclick="setColor('#f97316')"></span>
+            <span class="cp" style="background:#d97706" onclick="setColor('#d97706')"></span>
+            <span class="cp" style="background:#ef4444" onclick="setColor('#ef4444')"></span>
+            <span class="cp" style="background:#6b7280" onclick="setColor('#6b7280')"></span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-btns">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn" id="modal-ok" onclick="handleModalOk()">Add</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<header>
+  <div>
+    <div class="h-sub">// tools dashboard</div>
+    <div class="h-title"><span class="h-title-accent">AI Hub</span></div>
+    <div class="main-tabs">
+      <button class="mtab active" onclick="switchMainTab('links')">Links</button>
+      <button class="mtab" onclick="switchMainTab('practices')">Best Practices</button>
+    </div>
+  </div>
+  <div class="h-right">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input id="search" type="text" placeholder="search..." autocomplete="off">
+    </div>
+    <button class="btn" onclick="openModal()">+ new Entry()</button>
+  </div>
+</header>
+
+<div id="view-practices" style="display:none; width: 100%;">
+      <div id="practices-container"></div>
+    </div>
+    <div id="view-links">
+    <div class="grid" id="grid">
+
+<!-- AGENTS -->
+<div class="card" id="cat-agents" style="--acc:var(--agents)">
+  <div class="card-head">
+    <div class="head-body">
+      <span class="head-name">Agents</span>
+      <span class="head-count" id="cnt-agents">10</span>
+    </div>
+  </div>
+  <ul class="tools" id="tools-agents"><li class="tool-row"><div class="ln">01</div><a href="https://chatgpt.com" target="_blank" class="tool-link" data-tip="AI від OpenAI на базі GPT-4o. Широкий спектр задач: текст, код, зображення"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=chatgpt.com&sz=32" alt=""><span class="tl-name">ChatGPT</span><span class="tl-domain">chatgpt.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">02</div><a href="https://claude.ai" target="_blank" class="tool-link" data-tip="Багатофункціональний AI від Anthropic. Найкращий для текстів, коду та глибокого аналізу"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=claude.ai&sz=32" alt=""><span class="tl-name">Claude</span><span class="tl-domain">claude.ai</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">03</div><a href="https://gemini.google.com" target="_blank" class="tool-link" data-tip="AI від Google. Доступ до актуальних даних з інтернету, інтеграція з Google Workspace"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=gemini.google.com&sz=32" alt=""><span class="tl-name">Google Gemini</span><span class="tl-domain">gemini.google.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">04</div><a href="https://copilot.microsoft.com" target="_blank" class="tool-link" data-tip="AI від Microsoft на базі GPT-4. Інтеграція з Office 365, Teams та Windows"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=copilot.microsoft.com&sz=32" alt=""><span class="tl-name">Microsoft Copilot</span><span class="tl-domain">copilot.microsoft.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">05</div><a href="https://meta.ai" target="_blank" class="tool-link" data-tip="AI від Meta. Вбудований в Instagram, WhatsApp, Messenger. Модель Llama 3"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=meta.ai&sz=32" alt=""><span class="tl-name">Meta AI</span><span class="tl-domain">meta.ai</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">06</div><a href="https://open-claw.org" target="_blank" class="tool-link"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=open-claw.org&sz=32" alt=""><span class="tl-name">OpenClaw</span><span class="tl-domain">open-claw.org</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">07</div><a href="https://chat.deepseek.com" target="_blank" class="tool-link" data-tip="Потужна китайська модель з відкритим кодом. Дуже сильна в математиці та програмуванні"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=deepseek.com&sz=32" alt=""><span class="tl-name">DeepSeek</span><span class="tl-domain">deepseek.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">08</div><a href="https://perplexity.ai" target="_blank" class="tool-link" data-tip="AI-пошуковик з посиланнями на джерела. Ідеальний для досліджень і перевірки фактів"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=perplexity.ai&sz=32" alt=""><span class="tl-name">Perplexity</span><span class="tl-domain">perplexity.ai</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">09</div><a href="https://grok.com" target="_blank" class="tool-link" data-tip="AI від xAI (Ілон Маск). Доступ до X у реальному часі, менше обмежень"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=grok.com&sz=32" alt=""><span class="tl-name">Grok</span><span class="tl-domain">grok.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">10</div><a href="https://chat.mistral.ai" target="_blank" class="tool-link" data-tip="Французький AI. Швидкий, ефективний, відкритий код. Сильний в мовах ЄС"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=mistral.ai&sz=32" alt=""><span class="tl-name">Mistral Le Chat</span><span class="tl-domain">mistral.ai</span><span class="tl-arrow">↗</span></a></li>
+</ul>
+</div>
+
+<!-- UI|UX -->
+<div class="card" id="cat-uiux" style="--acc:var(--uiux)">
+  <div class="card-head">
+    <div class="head-body">
+      <span class="head-name">UI · UX</span>
+      <span class="head-count" id="cnt-uiux">8</span>
+    </div>
+  </div>
+  <ul class="tools" id="tools-uiux"><li class="tool-row"><div class="ln">01</div><a href="https://www.figma.com" target="_blank" class="tool-link" data-tip="Головний інструмент UI/UX дизайну. Колаборація в реальному часі, AI-функції"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=figma.com&sz=32" alt=""><span class="tl-name">Figma</span><span class="tl-domain">figma.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">02</div><a href="https://webflow.com" target="_blank" class="tool-link" data-tip="Візуальний no-code конструктор з CMS та хостингом. Потужний для бізнес-сайтів"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=webflow.com&sz=32" alt=""><span class="tl-name">Webflow</span><span class="tl-domain">webflow.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">03</div><a href="https://framer.com" target="_blank" class="tool-link" data-tip="No-code сайти з крутими анімаціями та AI-генерацією сторінок з тексту"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=framer.com&sz=32" alt=""><span class="tl-name">Framer</span><span class="tl-domain">framer.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">04</div><a href="https://v0.dev" target="_blank" class="tool-link" data-tip="Генерує UI-компоненти React/shadcn за текстовим описом. Від команди Vercel"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=v0.dev&sz=32" alt=""><span class="tl-name">v0 by Vercel</span><span class="tl-domain">v0.dev</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">05</div><a href="https://lovable.dev" target="_blank" class="tool-link" data-tip="AI-генератор веб-додатків через чат. Описуєш словами — отримуєш React + Supabase додаток"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=lovable.dev&sz=32" alt=""><span class="tl-name">Lovable</span><span class="tl-domain">lovable.dev</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">06</div><a href="https://bolt.new" target="_blank" class="tool-link" data-tip="Миттєве створення веб-додатків прямо в браузері. StackBlitz + AI агент"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=bolt.new&sz=32" alt=""><span class="tl-name">Bolt.new</span><span class="tl-domain">bolt.new</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">07</div><a href="https://higgsfield.ai" target="_blank" class="tool-link" data-tip="AI-інструменти для маркетологів. Відео, зображення, тексти в одному місці"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=higgsfield.ai&sz=32" alt=""><span class="tl-name">Higgsfield</span><span class="tl-domain">higgsfield.ai</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">08</div><a href="https://cursor.com" target="_blank" class="tool-link" data-tip="IDE з AI що розуміє весь проект. Найпопулярніший AI-редактор серед розробників"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=cursor.com&sz=32" alt=""><span class="tl-name">Cursor</span><span class="tl-domain">cursor.com</span><span class="tl-arrow">↗</span></a></li>
+</ul>
+</div>
+
+<!-- IMAGES -->
+<div class="card" id="cat-images" style="--acc:var(--images)">
+  <div class="card-head">
+    <div class="head-body">
+      <span class="head-name">Images</span>
+      <span class="head-count" id="cnt-images">7</span>
+    </div>
+  </div>
+  <ul class="tools" id="tools-images"><li class="tool-row"><div class="ln">01</div><a href="https://midjourney.com" target="_blank" class="tool-link" data-tip="Найкраща якість AI-генерації. Художній і фотореалістичний стиль. Через Discord або веб"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=midjourney.com&sz=32" alt=""><span class="tl-name">Midjourney</span><span class="tl-domain">midjourney.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">02</div><a href="https://www.canva.com/ai-image-generator" target="_blank" class="tool-link" data-tip="AI-генерація зображень в Canva. Зручно для тих хто вже використовує Canva"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=canva.com&sz=32" alt=""><span class="tl-name">Canva AI</span><span class="tl-domain">canva.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">03</div><a href="https://openai.com/dall-e-3" target="_blank" class="tool-link" data-tip="Генератор від OpenAI. Вбудований в ChatGPT Plus. Точно слідує текстовому опису"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=openai.com&sz=32" alt=""><span class="tl-name">DALL-E 3</span><span class="tl-domain">openai.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">04</div><a href="https://stability.ai" target="_blank" class="tool-link" data-tip="Відкрита Stable Diffusion. Можна запускати локально. База для багатьох інших сервісів"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=stability.ai&sz=32" alt=""><span class="tl-name">Stable Diffusion</span><span class="tl-domain">stability.ai</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">05</div><a href="https://firefly.adobe.com" target="_blank" class="tool-link" data-tip="AI від Adobe. Навчена на ліцензованому контенті — безпечна для комерційного використання"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=adobe.com&sz=32" alt=""><span class="tl-name">Adobe Firefly</span><span class="tl-domain">firefly.adobe.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">06</div><a href="https://leonardo.ai" target="_blank" class="tool-link" data-tip="Потужний генератор для ігрових артів та концептів. Багато кастомних моделей і стилів"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=leonardo.ai&sz=32" alt=""><span class="tl-name">Leonardo AI</span><span class="tl-domain">leonardo.ai</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">07</div><a href="https://ideogram.ai" target="_blank" class="tool-link" data-tip="Спеціалізується на зображеннях з текстом і типографікою. Найкращий для логотипів"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=ideogram.ai&sz=32" alt=""><span class="tl-name">Ideogram</span><span class="tl-domain">ideogram.ai</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">08</div><a href="https://lens.google.com" target="_blank" class="tool-link" data-tip="Пошук за зображенням. Розпізнавання тексту, рослин, тварин, товарів, QR-кодів"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=lens.google.com&sz=32" alt=""><span class="tl-name">Google Lens</span><span class="tl-domain">lens.google.com</span><span class="tl-arrow">↗</span></a></li>
+</ul>
+</div>
+
+<!-- VIDEO -->
+<div class="card" id="cat-video" style="--acc:var(--video)">
+  <div class="card-head">
+    <div class="head-body">
+      <span class="head-name">Video</span>
+      <span class="head-count" id="cnt-video">6</span>
+    </div>
+  </div>
+  <ul class="tools" id="tools-video"><li class="tool-row"><div class="ln">01</div><a href="https://sora.com" target="_blank" class="tool-link" data-tip="Генератор відео від OpenAI. Вражаюча фотореалістичність і розуміння фізики світу"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=sora.com&sz=32" alt=""><span class="tl-name">Sora</span><span class="tl-domain">sora.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">02</div><a href="https://runwayml.com" target="_blank" class="tool-link" data-tip="Топ-інструмент для AI-генерації та редагування відео. Gen-3 Alpha — найкраща якість"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=runwayml.com&sz=32" alt=""><span class="tl-name">Runway ML</span><span class="tl-domain">runwayml.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">03</div><a href="https://klingai.com" target="_blank" class="tool-link" data-tip="Китайський генератор відео з відмінною якістю рухів. Конкурент Sora та Runway"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=klingai.com&sz=32" alt=""><span class="tl-name">Kling AI</span><span class="tl-domain">klingai.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">04</div><a href="https://heygen.com" target="_blank" class="tool-link" data-tip="AI-відео з реалістичними аватарами та багатомовним озвученням. Для бізнесу"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=heygen.com&sz=32" alt=""><span class="tl-name">HeyGen</span><span class="tl-domain">heygen.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">05</div><a href="https://www.synthesia.io" target="_blank" class="tool-link" data-tip="Корпоративні відео з AI-ведучими. 140+ мов озвучення. Для навчальних матеріалів"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=synthesia.io&sz=32" alt=""><span class="tl-name">Synthesia</span><span class="tl-domain">synthesia.io</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">06</div><a href="https://pika.art" target="_blank" class="tool-link" data-tip="Швидка генерація коротких відеокліпів з тексту або фото. Легкий вхід, доступна ціна"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=pika.art&sz=32" alt=""><span class="tl-name">Pika Labs</span><span class="tl-domain">pika.art</span><span class="tl-arrow">↗</span></a></li>
+</ul>
+</div>
+
+<!-- AUDIO -->
+<div class="card" id="cat-audio" style="--acc:var(--audio)">
+  <div class="card-head">
+    <div class="head-body">
+      <span class="head-name">Audio</span>
+      <span class="head-count" id="cnt-audio">5</span>
+    </div>
+  </div>
+  <ul class="tools" id="tools-audio"><li class="tool-row"><div class="ln">01</div><a href="https://elevenlabs.io" target="_blank" class="tool-link" data-tip="Найреалістичніший AI-синтез голосу. Клонування голосу по 30 секундах. 29 мов"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=elevenlabs.io&sz=32" alt=""><span class="tl-name">ElevenLabs</span><span class="tl-domain">elevenlabs.io</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">02</div><a href="https://suno.com" target="_blank" class="tool-link" data-tip="Генерує повноцінні пісні з вокалом за текстовим описом. Будь-який жанр за секунди"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=suno.com&sz=32" alt=""><span class="tl-name">Suno</span><span class="tl-domain">suno.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">03</div><a href="https://www.udio.com" target="_blank" class="tool-link" data-tip="AI-генерація музики будь-яких жанрів. Висока якість і деталізація звуку"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=udio.com&sz=32" alt=""><span class="tl-name">Udio</span><span class="tl-domain">udio.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">04</div><a href="https://otter.ai" target="_blank" class="tool-link" data-tip="Автоматична транскрипція зустрічей Zoom/Meet у реальному часі. Підводить підсумки"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=otter.ai&sz=32" alt=""><span class="tl-name">Otter.ai</span><span class="tl-domain">otter.ai</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">05</div><a href="https://www.descript.com" target="_blank" class="tool-link" data-tip="Редагуй аудіо і відео через редагування тексту транскрипції. Видаляє паузи та 'е-е'"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=descript.com&sz=32" alt=""><span class="tl-name">Descript</span><span class="tl-domain">descript.com</span><span class="tl-arrow">↗</span></a></li>
+</ul>
+</div>
+
+<!-- CODE -->
+<div class="card" id="cat-code" style="--acc:var(--code)">
+  <div class="card-head">
+    <div class="head-body">
+      <span class="head-name">Code</span>
+      <span class="head-count" id="cnt-code">6</span>
+    </div>
+  </div>
+  <ul class="tools" id="tools-code"><li class="tool-row"><div class="ln">01</div><a href="https://github.com/features/copilot" target="_blank" class="tool-link" data-tip="AI прямо в VS Code та JetBrains. Автодоповнення, чат, пояснення коду від GitHub"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=github.com&sz=32" alt=""><span class="tl-name">GitHub Copilot</span><span class="tl-domain">github.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">02</div><a href="https://colab.research.google.com" target="_blank" class="tool-link" data-tip="Безкоштовні Jupyter ноутбуки з GPU в хмарі. Стандарт для ML-розробки і досліджень"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=colab.research.google.com&sz=32" alt=""><span class="tl-name">Google Colab</span><span class="tl-domain">colab.research.google.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">03</div><a href="https://cursor.com" target="_blank" class="tool-link" data-tip="IDE що розуміє весь кодовий проект. Найпопулярніший AI-редактор. Засновано на VS Code"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=cursor.com&sz=32" alt=""><span class="tl-name">Cursor</span><span class="tl-domain">cursor.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">04</div><a href="https://replit.com" target="_blank" class="tool-link" data-tip="Онлайн IDE з AI-агентом. Деплой одним кліком. Ідеальний для прототипів"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=replit.com&sz=32" alt=""><span class="tl-name">Replit AI</span><span class="tl-domain">replit.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">05</div><a href="https://codeium.com/windsurf" target="_blank" class="tool-link" data-tip="Агентний AI-редактор від Codeium. Flows — агент що сам планує і виконує задачі"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=codeium.com&sz=32" alt=""><span class="tl-name">Windsurf</span><span class="tl-domain">codeium.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">06</div><a href="https://aistudio.google.com" target="_blank" class="tool-link" data-tip="Google AI Studio — розробка з Gemini API. Тестування промптів і API-ключі безкоштовно"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=aistudio.google.com&sz=32" alt=""><span class="tl-name">AI Studio</span><span class="tl-domain">aistudio.google.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">07</div><a href="https://www.tabnine.com" target="_blank" class="tool-link" data-tip="AI-автодоповнення коду для будь-якого редактора. Може працювати повністю локально"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=tabnine.com&sz=32" alt=""><span class="tl-name">Tabnine</span><span class="tl-domain">tabnine.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">08</div><a href="https://claude.ai" target="_blank" class="tool-link" data-tip="CLI-інструмент від Anthropic для agentic-кодування прямо в терміналі"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=claude.ai&sz=32" alt=""><span class="tl-name">Claude Code</span><span class="tl-domain">claude.ai</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">09</div><a href="https://cloud.google.com/vertex-ai" target="_blank" class="tool-link" data-tip="Корпоративна AI-платформа Google. Навчання моделей, MLOps, деплой у продакшн"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=cloud.google.com&sz=32" alt=""><span class="tl-name">Vertex AI</span><span class="tl-domain">cloud.google.com</span><span class="tl-arrow">↗</span></a></li>
+</ul>
+</div>
+
+<!-- PUBLISH -->
+<div class="card" id="cat-publish" style="--acc:var(--publish)">
+  <div class="card-head">
+    <div class="head-body">
+      <span class="head-name">Publish</span>
+      <span class="head-count" id="cnt-publish">5</span>
+    </div>
+  </div>
+  <ul class="tools" id="tools-publish"><li class="tool-row"><div class="ln">01</div><a href="https://vercel.com" target="_blank" class="tool-link" data-tip="Найкращий хостинг для Next.js і фронтенду. Миттєвий деплой з GitHub, глобальний CDN"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=vercel.com&sz=32" alt=""><span class="tl-name">Vercel</span><span class="tl-domain">vercel.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">02</div><a href="https://netlify.com" target="_blank" class="tool-link" data-tip="Хостинг статичних сайтів і serverless функцій. Простий деплой, щедрий безкоштовний тариф"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=netlify.com&sz=32" alt=""><span class="tl-name">Netlify</span><span class="tl-domain">netlify.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">03</div><a href="https://supabase.com" target="_blank" class="tool-link" data-tip="Open-source Firebase. PostgreSQL + Auth + Realtime + Storage. Безкоштовний старт"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=supabase.com&sz=32" alt=""><span class="tl-name">Supabase</span><span class="tl-domain">supabase.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">04</div><a href="https://render.com" target="_blank" class="tool-link" data-tip="Хмарна платформа для веб-сервісів, API та баз даних. Сучасна альтернатива Heroku"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=render.com&sz=32" alt=""><span class="tl-name">Render</span><span class="tl-domain">render.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">05</div><a href="https://railway.app" target="_blank" class="tool-link" data-tip="Деплой серверів, БД та бекенду. Зрозумілий інтерфейс, займає лічені хвилини"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=railway.app&sz=32" alt=""><span class="tl-name">Railway</span><span class="tl-domain">railway.app</span><span class="tl-arrow">↗</span></a></li>
+</ul>
+</div>
+
+<!-- DOCS -->
+<div class="card" id="cat-docs" style="--acc:var(--docs)">
+  <div class="card-head">
+    <div class="head-body">
+      <span class="head-name">Docs &amp; Research</span>
+      <span class="head-count" id="cnt-docs">6</span>
+    </div>
+  </div>
+  <ul class="tools" id="tools-docs"><li class="tool-row"><div class="ln">01</div><a href="https://notebooklm.google.com" target="_blank" class="tool-link" data-tip="AI-блокнот для аналізу документів. Завантажуй PDF, відео, статті — ставь питання"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=notebooklm.google.com&sz=32" alt=""><span class="tl-name">NotebookLM</span><span class="tl-domain">notebooklm.google.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">02</div><a href="https://huggingface.co" target="_blank" class="tool-link" data-tip="Найбільший хаб для AI-моделей та датасетів. GitHub для ML-спільноти. 500k+ моделей"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=huggingface.co&sz=32" alt=""><span class="tl-name">Hugging Face</span><span class="tl-domain">huggingface.co</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">03</div><a href="https://arxiv.org" target="_blank" class="tool-link" data-tip="Безкоштовний архів наукових препринтів. Всі важливі AI-дослідження виходять тут першими"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=arxiv.org&sz=32" alt=""><span class="tl-name">arXiv</span><span class="tl-domain">arxiv.org</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">04</div><a href="https://platform.openai.com/docs" target="_blank" class="tool-link" data-tip="API-документація GPT-4, DALL-E, Whisper та інших моделей OpenAI"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=openai.com&sz=32" alt=""><span class="tl-name">OpenAI Docs</span><span class="tl-domain">platform.openai.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">05</div><a href="https://deepmind.google" target="_blank" class="tool-link" data-tip="Дослідницька лабораторія Google. AlphaFold, Gemini, AlphaCode та інші прориви в AI"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=deepmind.google&sz=32" alt=""><span class="tl-name">Google DeepMind</span><span class="tl-domain">deepmind.google</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">06</div><a href="https://docs.anthropic.com" target="_blank" class="tool-link" data-tip="Офіційна документація Claude API, Prompt Engineering та Anthropic SDK"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=anthropic.com&sz=32" alt=""><span class="tl-name">Anthropic Docs</span><span class="tl-domain">docs.anthropic.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">07</div><a href="https://paperswithcode.com" target="_blank" class="tool-link" data-tip="ML-статті з вихідним кодом. Відстеження SOTA результатів по задачах"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=paperswithcode.com&sz=32" alt=""><span class="tl-name">Papers With Code</span><span class="tl-domain">paperswithcode.com</span><span class="tl-arrow">↗</span></a></li>
+<li class="tool-row"><div class="ln">08</div><a href="https://learnprompting.org" target="_blank" class="tool-link" data-tip="Безкоштовний курс по prompt engineering. Від базових технік до складних агентних систем"><img class="tl-icon" src="https://www.google.com/s2/favicons?domain=learnprompting.org&sz=32" alt=""><span class="tl-name">Learn Prompting</span><span class="tl-domain">learnprompting.org</span><span class="tl-arrow">↗</span></a></li>
+</ul>
+</div>
+
+
+
+<!-- CUSTOM (dynamic) -->
+<div class="card" id="cat-custom" style="--acc:var(--custom); display:none">
+  <div class="card-head">
+    <div class="head-body">
+      <span class="head-name">My tools</span>
+      <span class="head-count" id="cnt-custom">0</span>
+    </div>
+  </div>
+  <ul class="tools" id="tools-custom"></ul>
+</div>
+
+</div><!-- /grid -->
+</div><!-- /wrap -->
+
+<script>
+const STORAGE_KEY = 'ai-hub-v4';
+
+
+const defaultWorkflows = [
+  { id: 'dw1', catInfo: {name: 'DEVELOPMENT', color: '#0ea5e9'}, title: 'Робіть веб-додатки з нуля', why: 'Швидка ідеація + готовий UI за хвилини + глибокий контроль над кодом у фіналі. Дозволяє запустити працюючий сервіс за години замість тижнів.', steps: [
+    {name: 'Gemini', url: 'https://gemini.google.com', desc: 'Генерує ідею, прописує структуру даних та архітектуру логіки.'},
+    {name: 'Lovable або v0', url: 'https://lovable.dev, https://v0.dev', desc: 'Миттєво генерує React-верстку та базовий UI безпосередньо з текстового опису.'},
+    {name: 'Cursor або Windsurf', url: 'https://cursor.com, https://codeium.com/windsurf', desc: 'Фінальне налаштування бази даних та складної бекенд-логіки.'}] },
+  { id: 'dw2', catInfo: {name: 'MEDIA', color: '#f97316'}, title: 'Професійне відео (Промо-ролик)', why: 'Вражаюча якість статичних кадрів від MJ ідеально поєднується з плавною генерацією руху Runway або Luma.', steps: [
+    {name: 'Claude', url: 'https://claude.ai', desc: 'Пише детальні промпти для кожної сцени під розкадровку.'},
+    {name: 'Midjourney', url: 'https://midjourney.com', desc: 'Генерує найбільш фотореалістичні та художні опорні кадри.'},
+    {name: 'Runway ML або Luma Dream Machine', url: 'https://runwayml.com, https://lumalabs.ai', desc: 'Плавно анімує кадри з найкращою кінематографією.'},
+    {name: 'ElevenLabs', url: 'https://elevenlabs.io', desc: 'Додає природну студійну озвучку.'}] },
+  { id: 'dw3', catInfo: {name: 'LANDING', color: '#8b5cf6'}, title: 'Швидкий запуск Лендінгу', why: 'Комбінація AI-генерації тексту, візуалів та no-code платформи для миттєвого результату.', steps: [
+    {name: 'ChatGPT або Claude', url: 'https://chatgpt.com, https://claude.ai', desc: 'Створення структури та продаючих текстів.'},
+    {name: 'Midjourney', url: 'https://midjourney.com', desc: 'Генерація унікальних ілюстрацій та фонів.'},
+    {name: 'Framer або Webflow', url: 'https://framer.com, https://webflow.com', desc: 'Збірка сайту з готовими анімаціями через AI-імпорт.'}] },
+  { id: 'dw4', catInfo: {name: 'DASHBOARD', color: '#10b981'}, title: 'Розробка Дашбордів та CRM', why: 'Найкращий стек для створення внутрішніх інструментів та складних інтерфейсів з базою даних.', steps: [
+    {name: 'Cursor', url: 'https://cursor.com', desc: 'Проектування бази даних та API.'},
+    {name: 'Lovable', url: 'https://lovable.dev', desc: 'Генерація складних таблиць, графіків та форм.'},
+    {name: 'Supabase', url: 'https://supabase.com', desc: 'Бекенд та автентифікація в один клік.'}] },
+  { id: 'dw5', catInfo: {name: 'AUTOMATION', color: '#ec4899'}, title: 'AI Агенти та Автоматизація', why: 'Зв’яжіть сотні сервісів в єдину мережу, де AI приймає рішення та виконує дії.', steps: [
+    {name: 'Make.com або Zapier', url: 'https://make.com, https://zapier.com', desc: 'Побудова логіки та потоків даних.'},
+    {name: 'OpenAI API або Anthropic API', url: 'https://openai.com, https://anthropic.com', desc: 'Підключення мозку для обробки інформації.'},
+    {name: 'Google Sheets / Slack', url: 'https://google.com, https://slack.com', desc: 'Кінцеві точки для виводу результатів.'}] },
+  { id: 'dw6', catInfo: {name: 'CONTENT', color: '#d97706'}, title: 'Контент-стратегія 360°', why: 'Повний цикл від пошуку ідей до готових постів за лічені хвилини.', steps: [
+    {name: 'Perplexity', url: 'https://perplexity.ai', desc: 'Пошук свіжих трендів та перевірених фактів.'},
+    {name: 'Claude', url: 'https://claude.ai', desc: 'Написання постів у різних тональностях.'},
+    {name: 'ChatGPT', url: 'https://chatgpt.com', desc: 'Адаптація контенту під різні соцмережі.'}] }
+];
+
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { items:[], cats:[], workflows:[] }; }
+  catch { return { items:[], cats:[], workflows:[] }; }
+}
+function save(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+
+const tip = document.getElementById('tip');
+document.addEventListener('mouseover', e => {
+  const el = e.target.closest('[data-tip]');
+  if (!el) return;
+  tip.textContent = el.dataset.tip;
+  tip.style.opacity = '1';
+});
+document.addEventListener('mouseout', e => {
+  if (!e.relatedTarget || !e.relatedTarget.closest('[data-tip]')) tip.style.opacity = '0';
+});
+document.addEventListener('mousemove', e => {
+  const x = e.clientX + 14, y = e.clientY + 14;
+  tip.style.left = (x + 240 > window.innerWidth ? e.clientX - 254 : x) + 'px';
+  tip.style.top  = (y + 80  > window.innerHeight ? e.clientY - 74  : y) + 'px';
+});
+
+document.getElementById('search').addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  document.querySelectorAll('.tool-row:not(.div-row)').forEach(row => {
+    if (!q) { row.classList.remove('hidden'); return; }
+    const a = row.querySelector('.tool-link');
+    if (!a) return;
+    const t = [(a.querySelector('.tl-name')?.textContent||''),
+               (a.querySelector('.tl-domain')?.textContent||''),
+               (a.dataset.tip||'')].join(' ').toLowerCase();
+    row.classList.toggle('hidden', !t.includes(q));
+  });
+  document.querySelectorAll('.card').forEach(card => {
+    const visible = card.querySelectorAll('.tool-row:not(.div-row):not(.hidden)').length;
+    card.classList.toggle('hidden', q.length > 0 && visible === 0);
+  });
+});
+
+function getDomain(url) {
+  try { return new URL(url.split(',')[0].trim()).hostname.replace(/^www\./,''); } catch { return ''; }
+}
+
+function escH(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function makeRow(item, idx, deletable) {
+  const domain = getDomain(item.url);
+  const li = document.createElement('li');
+  li.className = 'tool-row';
+  li.dataset.id = item.id;
+  li.innerHTML = `
+    <div class="ln">${String(idx+1).padStart(2,'0')}</div>
+    <a href="${escH(item.url)}" target="_blank" class="tool-link" data-tip="${escH(item.tip||'')}">
+      <img class="tl-icon" src="https://www.google.com/s2/favicons?domain=${escH(domain)}&sz=32" alt="">
+      <span class="tl-name">${escH(item.name)}</span>
+      <span class="tl-domain">${escH(domain)}</span>
+      ${deletable ? `<span class="tl-del" title="Remove" onclick="removeItem(event,'${item.id}','${item.cat}')">✕</span>` : ''}
+      <span class="tl-arrow">↗</span>
+    </a>`;
+  return li;
+}
+
+function reindex(list) {
+  if(!list) return;
+  list.querySelectorAll('.tool-row:not(.div-row)').forEach((r,i) => {
+    const ln = r.querySelector('.ln');
+    if (ln) ln.textContent = String(i+1).padStart(2,'0');
+  });
+}
+
+function updateCount(catId) {
+  const list = document.getElementById('tools-' + catId);
+  const cnt  = document.getElementById('cnt-' + catId);
+  if (!list || !cnt) return;
+  cnt.textContent = list.querySelectorAll('.tool-row:not(.div-row)').length;
+}
+
+function removeItem(e, id, catId) {
+  e.preventDefault(); e.stopPropagation();
+  const data = load();
+  data.items = data.items.filter(x => String(x.id) !== String(id));
+  save(data);
+  const row = document.querySelector(`.tool-row[data-id="${id}"]`);
+  if (row) row.remove();
+  reindex(document.getElementById('tools-' + catId));
+  updateCount(catId);
+}
+
+function appendItem(item, catId) {
+  const list = document.getElementById('tools-' + catId);
+  if (!list) return;
+  const idx = list.querySelectorAll('.tool-row:not(.div-row)').length;
+  list.appendChild(makeRow(item, idx, true));
+  updateCount(catId);
+  const card = document.getElementById('cat-' + catId);
+  if (card) card.style.display = '';
+}
+
+function refreshCatSelect() {
+  const sel = document.getElementById('f-cat');
+  if (!sel) return;
+  const data = load();
+  const fixed = [
+    {v:'agents',  l:'Agents'},  {v:'uiux',   l:'UI · UX'},
+    {v:'images',  l:'Images'},  {v:'video',  l:'Video'},
+    {v:'audio',   l:'Audio'},   {v:'code',   l:'Code'},
+    {v:'publish', l:'Publish'}, {v:'docs',   l:'Docs'}
+  ];
+  sel.innerHTML = '';
+  fixed.forEach(f => {
+    const o = document.createElement('option');
+    o.value = f.v; o.textContent = f.l;
+    sel.appendChild(o);
+  });
+  data.cats.forEach(cat => {
+    const o = document.createElement('option');
+    o.value = cat.id; o.textContent = cat.name;
+    sel.appendChild(o);
+  });
+}
+
+function createCatCard(cat) {
+  const grid = document.getElementById('grid');
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.id = 'cat-' + cat.id;
+  card.dataset.dynamic = 'true';
+  card.style.cssText = `--acc:${cat.color}`;
+  card.innerHTML = `
+    <div class="card-head">
+      <div class="head-body">
+        <span class="head-name">${escH(cat.name)}</span>
+        <span class="head-count" id="cnt-${cat.id}">0</span>
+        <span class="tl-del" style="opacity:.5;margin-left:6px;font-size:10px;" title="Delete category" onclick="removeCategory('${cat.id}')">✕</span>
+      </div>
+    </div>
+    <ul class="tools" id="tools-${cat.id}"></ul>`;
+  grid.appendChild(card);
+}
+
+function removeCategory(catId) {
+  if (!confirm('Ви дійсно хочете видалити цю категорію?')) return;
+  const data = load();
+  data.cats  = data.cats.filter(c => c.id !== catId);
+  data.items = data.items.filter(i => i.cat !== catId);
+  save(data);
+  const card = document.getElementById('cat-' + catId);
+  if (card) card.remove();
+  refreshCatSelect();
+}
+
+let activeTab = 'link';
+function openModal() { refreshCatSelect(); document.getElementById('modal').classList.add('open'); }
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  const ids = ['f-name','f-url','f-tip','fc-name','fw-title','fw-why','fw-catname'];
+  ids.forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = ''; });
+  if(document.getElementById('fw-steps-container')) document.getElementById('fw-steps-container').innerHTML = '';
+  stepCount = 0;
+  if(typeof addWfStepField === "function") addWfStepField();
+}
+document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
+
+function switchMainTab(tab) {
+  document.querySelectorAll('.mtab').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase().includes(tab==='links'?'link':'practice')));
+  document.getElementById('view-links').style.display = tab === 'links' ? '' : 'none';
+  document.getElementById('view-practices').style.display = tab === 'practices' ? '' : 'none';
+}
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.getElementById('tab-link').style.display = tab === 'link' ? '' : 'none';
+  document.getElementById('tab-category').style.display = tab === 'category' ? '' : 'none';
+  if(document.getElementById('tab-workflow')) document.getElementById('tab-workflow').style.display = tab==='workflow' ? '' : 'none';
+  document.querySelectorAll('.tab').forEach(b => {
+    const t = b.textContent.toLowerCase();
+    const match = (tab==='link'&&t.includes('link')) || (tab==='category'&&t.includes('cat')) || (tab==='workflow'&&t.includes('work'));
+    b.classList.toggle('active', match);
+  });
+  document.getElementById('modal-ok').textContent = tab==='workflow'?'Зберегти кейс':'Додати';
+}
+
+function setColor(hex) { document.getElementById('fc-color').value = hex; }
+
+function handleModalOk() {
+  if (activeTab === 'link') addLink();
+  else if (activeTab === 'category') addCategory();
+  else if (activeTab === 'workflow') addWorkflow();
+}
+
+function addLink() {
+  const name = document.getElementById('f-name').value.trim();
+  const url  = document.getElementById('f-url').value.trim();
+  const tip_ = document.getElementById('f-tip').value.trim();
+  const cat  = document.getElementById('f-cat').value;
+  if (!name || !url) { alert('Назва та URL обов’язкові'); return; }
+  const data = load();
+  const item = { id: String(Date.now()), name, url, tip: tip_, cat };
+  data.items.push(item);
+  save(data);
+  appendItem(item, cat);
+  closeModal();
+}
+
+function addCategory() {
+  const name  = document.getElementById('fc-name').value.trim();
+  const color = document.getElementById('fc-color').value;
+  if (!name) { alert('Назва категорії обов’язкова'); return; }
+  const id = 'c' + Date.now();
+  const cat = { id, name, color };
+  const data = load();
+  data.cats.push(cat);
+  save(data);
+  createCatCard(cat);
+  refreshCatSelect();
+  closeModal();
+  switchTab('link');
+  openModal();
+  document.getElementById('f-cat').value = id;
+}
+
+let stepCount = 0;
+function addWfStepField() {
+  stepCount++;
+  const c = document.getElementById('fw-steps-container');
+  if(!c) return;
+  const d = document.createElement('div');
+  d.style.cssText = 'border:1px dashed #e2e8f0; padding:12px; border-radius:8px; margin-bottom:12px; background: #f8fafc;';
+  d.className = 'wf-add-fields';
+  d.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><h4 style="font-size:10px;text-transform:uppercase;color:#64748b;font-weight:700;">Крок ${stepCount}</h4><span style="cursor:pointer;font-size:10px;color:#94a3b8;" onclick="this.parentElement.parentElement.remove()">✕</span></div>
+    <div class="field"><input class="wfs-name" type="text" placeholder="Назва сервісу (напр. Gemini / ChatGPT)" style="width:100%"></div>
+    <div class="field"><input class="wfs-url" type="text" placeholder="Посилання (через кому)" style="width:100%"></div>
+    <div class="field" style="margin-bottom:0"><textarea class="wfs-desc" placeholder="Що саме робимо на цьому кроці..." style="min-height:30px;width:100%"></textarea></div>`;
+  c.appendChild(d);
+}
+
+function renderWorkflows() {
+  const p = document.getElementById('practices-container');
+  if(!p) return;
+  p.innerHTML = '';
+  const data = load();
+  const all = [...defaultWorkflows, ...(data.workflows || [])];
+  all.forEach(wf => {
+    const card = document.createElement('div');
+    card.className = 'wf-card';
+    card.style.cssText = `--acc:${wf.catInfo.color}`;
+    
+    let stepsHtml = '';
+    wf.steps.forEach(st => {
+      const names = st.name.split(/[,\/]+| або | or /).map(s=>s.trim()).filter(Boolean);
+      const urls = st.url.split(/[,\s]+/).map(s=>s.trim()).filter(Boolean);
+      let toolsHtml = '';
+      names.forEach((n, i) => {
+        const u = urls[i] || urls[0] || '#';
+        const dom = getDomain(u);
+        toolsHtml += `<a href="${u}" target="_blank" class="wf-step-tool"><img src="https://www.google.com/s2/favicons?domain=${dom}&sz=64">${n}</a>`;
+        if(i < names.length - 1) toolsHtml += `<span class="wf-step-alt-btn">або</span>`;
+      });
+      stepsHtml += `<div class="wf-step"><div class="wf-step-dot"></div><div>${toolsHtml}</div><div class="wf-step-info">${st.desc}</div></div>`;
+    });
+    
+    card.innerHTML = `
+      <div class="wf-header">
+        <div class="wf-title">${wf.title}</div>
+        <div class="wf-tag" style="color:${wf.catInfo.color}">${wf.catInfo.name}</div>
+      </div>
+      <div class="wf-why-box" style="border-left-color:${wf.catInfo.color}">
+        <span class="wf-why-label">Чому це працює:</span>
+        <div class="wf-why-text">${wf.why}</div>
+      </div>
+      <div class="wf-stepper">
+        ${stepsHtml}
+      </div>`;
+    p.appendChild(card);
+  });
+}
+
+function addWorkflow() {
+  const title = document.getElementById('fw-title').value.trim();
+  const catName = document.getElementById('fw-catname').value.trim() || 'GENERAL';
+  const color = document.getElementById('fw-color').value;
+  const why = document.getElementById('fw-why').value.trim();
+  if(!title) { alert('Назва обов’язкова'); return; }
+  const nodes = document.querySelectorAll('.wf-add-fields');
+  const steps = [];
+  nodes.forEach(n => {
+    const name = n.querySelector('.wfs-name').value.trim();
+    if(name) steps.push({ name, url: n.querySelector('.wfs-url').value.trim(), desc: n.querySelector('.wfs-desc').value.trim() });
+  });
+  const data = load();
+  if(!data.workflows) data.workflows = [];
+  data.workflows.push({ id:'w'+Date.now(), title, catInfo:{name:catName.toUpperCase(), color}, why, steps });
+  save(data);
+  renderWorkflows();
+  closeModal();
+  switchMainTab('practices');
+}
+
+(function() {
+  const data = load();
+  data.cats.forEach(cat => createCatCard(cat));
+  data.items.forEach(item => appendItem(item, item.cat));
+  refreshCatSelect();
+  renderWorkflows();
+  if(typeof addWfStepField === "function") addWfStepField();
+})();
+</script>
+</body>
+</html>

@@ -424,6 +424,41 @@ header {
     .head-name { font-size: 10px !important; }
     .head-count { font-size: 9px !important; padding: 0 4px !important; }
 
+
+    /* --- MOBILE OPTIMIZATION --- */
+    @media (max-width: 768px) {
+      .wrap { padding: 0 12px 60px !important; }
+      
+      header { 
+        flex-direction: column !important; 
+        align-items: flex-start !important; 
+        padding: 24px 0 16px !important;
+        gap: 16px !important;
+      }
+      .h-right { 
+        width: 100% !important; 
+        flex-direction: column !important; 
+        align-items: stretch !important; 
+        margin-top: 10px !important;
+      }
+      .search-wrap { width: 100% !important; }
+      #search { width: 100% !important; }
+      .btn { width: 100% !important; text-align: center; }
+      
+      .grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+      #practices-container { grid-template-columns: 1fr !important; gap: 16px !important; }
+      
+      .modal { width: 95% !important; padding: 20px !important; }
+      .mtab { font-size: 13px !important; }
+      .h-title { font-size: 18px !important; }
+    }
+    
+    /* Touch optimization */
+    @media (pointer: coarse) {
+      .btn, .mtab, .tab, .tool-link { min-height: 36px; }
+      .tl-del { opacity: 1 !important; padding: 8px; }
+    }
+
 </style>
 </head>
 <body>

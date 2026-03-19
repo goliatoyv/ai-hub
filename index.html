@@ -372,7 +372,7 @@ header {
     .main-tabs { margin-top: 12px !important; }
     .mtab { font-size: 13px !important; }
     
-    .grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important; gap: 12px !important; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important; gap: 12px !important; }
     
     .card { padding: 4px 0 1px !important; border-radius: 8px !important; margin-bottom: 0 !important; }
     .card-head { padding: 4px 8px !important; border-bottom: 1px solid rgba(0,0,0,0.05) !important; margin-bottom: 2px !important; }
@@ -407,7 +407,7 @@ header {
     .head-name { font-size: 10.5px !important; }
     
     /* Slight header breathing room */
-    header { padding: 32px 0 24px !important; }
+    header { padding: 32px 0 20px !important; }
 
 
     /* Refined Balanced v6 (PROD) */
@@ -742,8 +742,11 @@ document.addEventListener('mousemove', e => {
   tip.style.top  = (y + 80  > window.innerHeight ? e.clientY - 74  : y) + 'px';
 });
 
+
 document.getElementById('search').addEventListener('input', function() {
   const q = this.value.toLowerCase().trim();
+  
+  // Filter Links
   document.querySelectorAll('.tool-row:not(.div-row)').forEach(row => {
     if (!q) { row.classList.remove('hidden'); return; }
     const a = row.querySelector('.tool-link');
@@ -753,6 +756,22 @@ document.getElementById('search').addEventListener('input', function() {
                (a.dataset.tip||'')].join(' ').toLowerCase();
     row.classList.toggle('hidden', !t.includes(q));
   });
+  document.querySelectorAll('.card').forEach(card => {
+    const visible = card.querySelectorAll('.tool-row:not(.div-row):not(.hidden)').length;
+    card.classList.toggle('hidden', q.length > 0 && visible === 0);
+  });
+
+  // Filter Best Practices (v6 FIX)
+  document.querySelectorAll('.wf-card').forEach(card => {
+    if (!q) { card.style.display = ''; return; }
+    const title = card.querySelector('.wf-title')?.textContent || '';
+    const why = card.querySelector('.wf-why-text')?.textContent || '';
+    const tools = Array.from(card.querySelectorAll('.wf-step-tool')).map(t => t.textContent).join(' ');
+    const text = (title + ' ' + why + ' ' + tools).toLowerCase();
+    card.style.display = text.includes(q) ? '' : 'none';
+  });
+});
+
   document.querySelectorAll('.card').forEach(card => {
     const visible = card.querySelectorAll('.tool-row:not(.div-row):not(.hidden)').length;
     card.classList.toggle('hidden', q.length > 0 && visible === 0);
@@ -775,7 +794,7 @@ function makeRow(item, idx, deletable) {
   li.innerHTML = `
     <div class="ln">${String(idx+1).padStart(2,'0')}</div>
     <a href="${escH(item.url)}" target="_blank" class="tool-link" data-tip="${escH(item.tip||'')}">
-      <img class="tl-icon" src="https://www.google.com/s2/favicons?domain=${escH(domain)}&sz=32" alt="">
+      <img class="tl-icon" src="https://www.google.com/s2/favicons?domain=${escH(domain)}&sz=32" alt="" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB4PSIzIiB5PSIzIiByeD0iMiIgcnk9IjIiLz48Y2lyY2xlIGN4PSI5IiBjeT0iOSIgcj0iMiIvPjxwYXRoIGQ9Im0yMSAxNS0zLjY3OC0zLjY3OGExLjIxIDEuMjEgMCAwIDAtMS43MDcgMGwtMy42MTUgMy42MTVhMS4yMSAxLjIxIDAtMCAxLTEuNzA3IDBMOSA5bC02IDYiLz48L3N2Zz4='">
       <span class="tl-name">${escH(item.name)}</span>
       <span class="tl-domain">${escH(domain)}</span>
       ${deletable ? `<span class="tl-del" title="Remove" onclick="removeItem(event,'${item.id}','${item.cat}')">✕</span>` : ''}
@@ -874,7 +893,7 @@ function removeCategory(catId) {
 }
 
 let activeTab = 'link';
-function openModal() { refreshCatSelect(); document.getElementById('modal').classList.add('open'); }
+function openModal() { refreshCatSelect(); switchTab('link'); document.getElementById('modal').classList.add('open'); }
 function closeModal() {
   document.getElementById('modal').classList.remove('open');
   const ids = ['f-name','f-url','f-tip','fc-name','fw-title','fw-why','fw-catname'];
@@ -958,6 +977,16 @@ function addWfStepField() {
   c.appendChild(d);
 }
 
+
+function removeWorkflow(e, id) {
+  e.preventDefault(); e.stopPropagation();
+  if(!confirm('Видалити цей кейс?')) return;
+  const data = load();
+  data.workflows = (data.workflows || []).filter(w => String(w.id) !== String(id));
+  save(data);
+  renderWorkflows();
+}
+
 function renderWorkflows() {
   const p = document.getElementById('practices-container');
   if(!p) return;
@@ -977,7 +1006,7 @@ function renderWorkflows() {
       names.forEach((n, i) => {
         const u = urls[i] || urls[0] || '#';
         const dom = getDomain(u);
-        toolsHtml += `<a href="${u}" target="_blank" class="wf-step-tool"><img src="https://www.google.com/s2/favicons?domain=${dom}&sz=64">${n}</a>`;
+        toolsHtml += `<a href="${u}" target="_blank" class="wf-step-tool"><img src="https://www.google.com/s2/favicons?domain=${dom}&sz=64" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB4PSIzIiB5PSIzIiByeD0iMiIgcnk9IjIiLz48Y2lyY2xlIGN4PSI5IiBjeT0iOSIgcj0iMiIvPjxwYXRoIGQ9Im0yMSAxNS0zLjY3OC0zLjY3OGExLjIxIDEuMjEgMCAwIDAtMS43MDcgMGwtMy42MTUgMy42MTVhMS4yMSAxLjIxIDAtMCAxLTEuNzA3IDBMOSA5bC02IDYiLz48L3N2Zz4='">${n}</a>`;
         if(i < names.length - 1) toolsHtml += `<span class="wf-step-alt-btn">або</span>`;
       });
       stepsHtml += `<div class="wf-step"><div class="wf-step-dot"></div><div>${toolsHtml}</div><div class="wf-step-info">${st.desc}</div></div>`;
@@ -986,7 +1015,9 @@ function renderWorkflows() {
     card.innerHTML = `
       <div class="wf-header">
         <div class="wf-title">${wf.title}</div>
-        <div class="wf-tag" style="color:${wf.catInfo.color}">${wf.catInfo.name}</div>
+        
+        <div class="wf-tag" style="color:${wf.catInfo.color}">${wf.catInfo.name} ${wf.id.startsWith('w') ? `<span class="tl-del" style="opacity:.6;margin-left:8px;font-size:11px;" title="Delete workflow" onclick="removeWorkflow(event, '${wf.id}')">✕</span>` : ''}</div>
+
       </div>
       <div class="wf-why-box" style="border-left-color:${wf.catInfo.color}">
         <span class="wf-why-label">Чому це працює:</span>

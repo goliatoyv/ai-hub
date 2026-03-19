@@ -772,12 +772,6 @@ document.getElementById('search').addEventListener('input', function() {
   });
 });
 
-  document.querySelectorAll('.card').forEach(card => {
-    const visible = card.querySelectorAll('.tool-row:not(.div-row):not(.hidden)').length;
-    card.classList.toggle('hidden', q.length > 0 && visible === 0);
-  });
-});
-
 function getDomain(url) {
   try { return new URL(url.split(',')[0].trim()).hostname.replace(/^www\./,''); } catch { return ''; }
 }
